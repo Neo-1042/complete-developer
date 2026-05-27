@@ -19,3 +19,16 @@ Then, a different part of the middleware checks whether the user is logged in, a
 which personal data it should show. Meanwhile, a third part of the middleware consolidates 
 the information from each of these data streams and then answers the server's request with the
 correct HTML.
+
+JavaScript-driven development relies on two primary
+architectural frameworks for creating APIs:
+1. REST
+2. GraphQL.
+
+The middleware layer can be written in any programming
+language.
+
+## BACKEND
+
+In a JavaScript-driven app, the backend runs on a server,
+typically **Express.js, Apache or NGINX**.
