@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>React Basics</title>
+    <title>React Basics Neo</title>
 </head>
 
 <body>
@@ -19,8 +19,13 @@
 
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
-        const container = document.querySelector('.js-container');
-        ReactDOM.createRoot(container).render('Welcome to SuperSimpleDev React Course');
+        const button = <button>Hello</button>;
+
+
+        // DOM = Document Object Model
+        const container = document.querySelector('.js-container'); // . --> means a class
+        // To setup React, we have to give it an HTML element:
+        ReactDOM.createRoot(container).render('Hello, World from React! .js-container');
     </script>
 </body>
 
