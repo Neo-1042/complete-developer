@@ -19,13 +19,25 @@
 
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
-        const button = <button>Hello</button>;
+        const button = <button>Hello, JSX Button</button>;
 
+        const paragraph = <p>JSX Paragraph of text</p>;
+
+        // It's a good practice to add these parentheses ()
+        // Notice the JavaScript code inside the curly braces {2+7}
+        const div = (
+            <div>
+                <button>Hello, JSX Button</button>
+                <p>JSX Paragraph of text {2+7}</p>
+            </div>
+        );
 
         // DOM = Document Object Model
         const container = document.querySelector('.js-container'); // . --> means a class
         // To setup React, we have to give it an HTML element:
-        ReactDOM.createRoot(container).render('Hello, World from React! .js-container');
+        // ReactDOM.createRoot(container).render('Hello, World from React! .js-container');
+        // ReactDOM.createRoot(container).render(button);
+        ReactDOM.createRoot(container).render(div);
     </script>
 </body>
 

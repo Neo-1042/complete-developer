@@ -41,3 +41,20 @@ JavaScript Equivalence:
 const button = document.createElement('button');
 button.innerHTML = 'hello';
 ```
+
+Web Browsers don't understand JSX, but **Babel** takes care of
+this.
+
+```jsx
+// It's a good practice to add these parentheses ()
+// Notice the JavaScript code inside the curly braces {2+7}
+const div = (
+    <div>
+        <button>Hello, JSX Button</button>
+        <p>JSX Paragraph of text {2+7}</p>
+    </div>
+);
+
+const container = document.querySelector('.js-container');
+ReactDOM.createRoot(container).render(div);
+```
