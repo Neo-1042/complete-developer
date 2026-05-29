@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>React Basics Neo</title>
+    <title>Chatbot</title>
 </head>
 
 <body>
@@ -19,16 +19,21 @@
 
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
-        const button = <button>Hello, JSX Button</button>;
 
-        const paragraph = <p>JSX Paragraph of text</p>;
+        function ChatInput() {
+            return (
+                <div>
+                    <input></input>
+                    <button>Send</button>
+                </div>
+            );
+        }
 
-        // It's a good practice to add these parentheses ()
-        // Notice the JavaScript code inside the curly braces {2+7}
         const div = (
             <div>
                 <button>Hello, JSX Button</button>
                 <p>JSX Paragraph of text {2+5}</p>
+                {ChatInput()}
             </div>
         );
 
