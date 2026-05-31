@@ -16,3 +16,19 @@ element needs to have a closing tab. For example, input:
 <!-- Self closing element -->
 <input />;
 ```
+
+### Component Syntax
+
+```jsx
+function ChatInput() {
+    return (
+        <div>
+            <input></input>
+            <button>Send</button>
+        </div>
+    );
+}
+
+<ChatInput></ChatInput>
+<ChatInput />
+```
