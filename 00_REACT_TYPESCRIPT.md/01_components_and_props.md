@@ -32,3 +32,24 @@ function ChatInput() {
 <ChatInput></ChatInput>
 <ChatInput />
 ```
+
+## JavaScript Guard Operator (&&)
+
+```javascript
+
+// If value1 is true, then value2 will be assigned to 'result'
+const result = value1 && value2;
+```
+
+## State
+
+State ---> Data that is connected to the HTML:
+when we update this data, it will update the HTML.
+
+Convert data into a STATE:
+```jsx
+const array = React.useState();
+// A new state gives us 2 values:
+const chatMessages = array[0]; // Current data
+const setChatMessages = array[1]; // Updater function
+```
