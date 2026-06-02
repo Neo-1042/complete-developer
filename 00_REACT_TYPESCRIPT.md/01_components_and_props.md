@@ -53,3 +53,22 @@ const array = React.useState();
 const chatMessages = array[0]; // Current data
 const setChatMessages = array[1]; // Updater function
 ```
+
+# A Simple JSX Expression
+
+The entry point of each React application is precisely the
+`App()` function:
+
+```jsx
+import React from "react";
+
+export default function App() {
+
+    const getElement = (weather: string): JSX.Element => {
+        const element = <h1>The weather is {weather}</h1>;
+        return element;
+    };
+    
+    return getElement("sunny");
+}
+```
