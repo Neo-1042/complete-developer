@@ -59,7 +59,7 @@ const setChatMessages = array[1]; // Updater function
 The entry point of each React application is precisely the
 `App()` function:
 
-```jsx
+```tsx
 import React from "react";
 
 export default function App() {
@@ -70,5 +70,113 @@ export default function App() {
     };
     
     return getElement("sunny");
+}
+```
+
+## A basic React (function) component
+
+```tsx
+import React from "react";
+
+export default function App() {
+
+    interface WeatherProps {
+        weather: string;
+    }
+
+    const clickHandler = (text: string): void => {
+        alert(text);
+    };
+
+    const WeatherComponent = (props: WeatherProps): JSX.Element => {
+        const text = `The weather is ${props.weather}`;
+
+        return (
+            <h1 onClick = {() => clickHandler(text)}>
+                {text}
+            </h1>
+        );
+    };
+
+    return (<WeatherComponent weather="sunny" />);
+
+}
+```
+
+## A Basic React (Class) Component
+
+```tsx
+import React from "react";
+
+export default function App() {
+
+    interface WeatherProps {
+        weather: string;
+    }
+
+    type WeatherState {
+        count: number;
+    };
+
+    class WeatherComponent extends React.Component<WeatherProps, WeatherState> {
+        constructor(props: WheatherProps) {
+            super(props);
+            this.state = {
+                count: 0
+            };
+        }
+
+        componentDidMount() {
+            this.setState({ count: 1});
+        }
+
+        clickHandler(): void {
+            this.setState({ count: this.state.count + 1 });
+        }
+
+        render() {
+            return (
+                <h1 onClick={() => this.clickHandler()}>
+                The weather is {this.props.weather}, and the
+                counter shows{" "}
+                {this.state.count}
+                </h1>
+            );
+        }
+    }
+
+    return (<WeatherComponent weather="Sunny" />);
+}
+```
+
+## Providing Reusable Behavior with Hooks
+
+```tsx
+import React, { useState, useEffect} from "react";
+
+export default function App() {
+
+    interface WeatherProps {
+        weather: string;
+    }
+
+    const WeatherComponent = ( props: WeatherProps): JSX.Element => {
+
+        const [count, setCount] = useState(0);
+        useEffect(() => {
+            setCount(1)
+        }, []); // Array of dependencies (if empty, code will execute only once).
+        
+        return (
+            <h1 onClick={() => setCount(count+1)}>
+                The weather is  {props.weather},
+                and the counter shows {count}
+            </h1>
+        );
+    };
+
+    return (
+        <WeatherComponent weather="sunny" />
+    );
 }
 ```
