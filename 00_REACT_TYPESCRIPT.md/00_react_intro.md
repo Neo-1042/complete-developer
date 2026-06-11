@@ -21,7 +21,7 @@ File = react-basics.html
 </script>
 ```
 
-## Babel + JSX = JavaScript XML
+## Babel + JSX = JavaScript XML or JavaScript Syntax Extension
 
 Babel is a JavaScript compiler (transpiler) which translates
 other languages into JavaScript.
@@ -57,4 +57,49 @@ const div = (
 
 const container = document.querySelector('.js-container');
 ReactDOM.createRoot(container).render(div);
+```
+
+React elements are immutable, and they make up components.
+
+Elements ---> Components.
+
+## React Components
+
+Classes or functions (more frequently) that output elements.
+A single physical file contains all the information necessary
+for a component, regardless of the underlying technologies.
+
+# Vite
+
+```bash
+npx create-vite@6.0.1
+# npm create vite
+
+cd new-project
+npm install
+npm run dev
+```
+
+## ESLint
+
+ESLint is a JavaScript and TypeScript static code analysis
+tool.
+
+## Hooks
+
+```tsx
+React.useState
+React.useEffect
+React.useRef
+React.useContext
+```
+
+## Imports
+
+```tsx
+// DEFAULT IMPORT
+import ChatMessages from './components/ChatMessages';
+
+// NAMED IMPORT
+import { ChatInput } from './components/ChatInput';
 ```
