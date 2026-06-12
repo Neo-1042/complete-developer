@@ -87,11 +87,16 @@ tool.
 
 ## Hooks
 
+Hooks allow you to insert React features (e.g. State)
+into your component.
+
 ```tsx
-React.useState
-React.useEffect
-React.useRef
-React.useContext
+React.useState(); // [counter, setCounter] Keep track of states
+React.useEffect(); // Dependency array. Execute it only once []
+React.useRef(); // Automatically save an HTML element from the component.
+// It let's you reference a value that is not needed for
+// rendering
+React.useContext(); // Manage the global state.
 ```
 
 ## Imports
