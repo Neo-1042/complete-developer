@@ -26,3 +26,33 @@ fetch('http://localhost:3000/api/products')
             });
     });
 ```
+
+## Axios = cleaner requests to the backend
+
+`npm install axios@1.8.4`
+
+```jsx
+import axios from 'axios';
+
+axios.get('http://localhost:3000/api/products')
+    .then((response) => {
+        console.log(response.data);
+    });
+```
+
+## Axios + useEffect
+
+`useEffect()` lets us control *when* some code runs.
+
+```jsx
+import { useEffect } from 'react';
+
+// By default, this code will run every time the component is
+// created or updated, but you can add a dependency array[]
+useEffect(() => {
+    axios.get('http://localhost:3000/api/products')
+        .then((response) => {
+            console.log(response.data);
+        });
+}, []); //empty dependency array -> will only run ONCE.
+```
