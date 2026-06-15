@@ -45,14 +45,39 @@ axios.get('http://localhost:3000/api/products')
 `useEffect()` lets us control *when* some code runs.
 
 ```jsx
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+
+const [products, setProducts] = useState([]); // [currentValue, updater function]
 
 // By default, this code will run every time the component is
 // created or updated, but you can add a dependency array[]
 useEffect(() => {
     axios.get('http://localhost:3000/api/products')
         .then((response) => {
+            setProducts(response.data);
+        });
+}, []); //empty dependency array -> will only run ONCE.
+```
+
+## Update the cart counter
+
+```jsx
+import { useEffect, useState } from 'react';
+
+const [products, setProducts] = useState([]); // [currentValue, updater function]
+
+// By default, this code will run every time the component is
+// created or updated, but you can add a dependency array[]
+useEffect(() => {
+    axios.get('http://localhost:3000/api/products')
+        .then((response) => {
+            setProducts(response.data);
+        });
+    axios.get('http://localhost:3000/api/cart-items')
+        .then((response) => {
             console.log(response.data);
         });
+
+
 }, []); //empty dependency array -> will only run ONCE.
 ```
