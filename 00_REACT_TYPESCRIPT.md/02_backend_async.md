@@ -65,6 +65,7 @@ useEffect(() => {
 import { useEffect, useState } from 'react';
 
 const [products, setProducts] = useState([]); // [currentValue, updater function]
+const [cart, setCart] = useState([]);
 
 // By default, this code will run every time the component is
 // created or updated, but you can add a dependency array[]
@@ -73,11 +74,52 @@ useEffect(() => {
         .then((response) => {
             setProducts(response.data);
         });
+    // Update the cart
     axios.get('http://localhost:3000/api/cart-items')
         .then((response) => {
-            console.log(response.data);
+            setCart(response.data);
         });
+    // <Header cart={cart}>
 
 
 }, []); //empty dependency array -> will only run ONCE.
+```
+
+Pass the cart information to the Header.jsx file:
+```jsx
+export function Header({ cart }) {
+
+    let totalQuantity = 0;
+
+    cart.forEach((cartItem) => {
+        totalQuantity += cartItem.quantity;
+    });
+
+    return(
+        <h1>HTML Code for the Header</h1>
+    );
+}
+// This is a shortcut for:
+export function Header(props) {
+    const cart = props.cart;
+}
+```
+
+### Server Proxy Configuration
+
+File = vite.config.js
+```javascript
+export default defineConfig({
+    plugins: [react()],
+    server: {
+        proxy: {
+            '/api': {
+                target: 'http://localhost:3000'
+            },
+            '/images': {
+                target: 'http://localhost:3000'
+            }
+        }
+    }
+})
 ```
