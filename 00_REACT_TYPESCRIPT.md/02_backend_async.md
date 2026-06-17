@@ -146,18 +146,38 @@ export function CheckoutPage(props) {
     const cart = props.cart;
 
     const [deliveryOptions, setDeliveryOptions] = useState([]);
+    // Add State for the payment summary
+    const [paymentSummary, setPaymentSummary] = useState(null);
+
 
     useEffect(() => {
         axios.get('/api/delivery-options')
             .then((response) => {
                 setDeliveryOptions(response.data);
             });
+        // Get the payment summary
+        axios.get('/api/payment-summary')
+            .then((response) => {
+                setPaymentSummary(response.data);
+            });
     }, []);
+
+
 }
 ```
 
 ```bash
 npm install dayjs@1.11.13
+```
+
+```jsx
+const selectedDeliveryOption = deliveryOptions
+    .find((deliveryOption) => {
+        // find() will loop through every option
+        // The first function that returns true will
+        // be saved in 'deliveryOption'
+        return deliveryOption.id === cartItem.deliveryOptionId;
+    });
 ```
 
 # Just React Book
