@@ -123,3 +123,99 @@ export default defineConfig({
     }
 })
 ```
+
+## Expand the cart with Product Details
+
+```jsx
+function App() {
+    const [cart, setCart] = useState([]);
+
+    useEffect(() => {
+        axios.get('/api/cart-items?expand=product')
+            .then((response) => {
+                setCart(response.data);
+            });
+    }, []);
+}
+```
+
+## Delivery Options with useEffect
+
+```jsx
+export function CheckoutPage(props) {
+    const cart = props.cart;
+
+    const [deliveryOptions, setDeliveryOptions] = useState([]);
+
+    useEffect(() => {
+        axios.get('/api/delivery-options')
+            .then((response) => {
+                setDeliveryOptions(response.data);
+            });
+    }, []);
+}
+```
+
+```bash
+npm install dayjs@1.11.13
+```
+
+# Just React Book
+
+## async/await
+
+JavaScript is a single-threaded programming language. This
+language can only process one line of code at a time.
+
+### Synchronous JavaScript
+
+```javascript
+function getContent() {
+    return "React";
+}
+
+function display() {
+    const what = getContent();
+    console.log(what);
+}
+
+console.log("Learning");
+display();
+```
+
+### Emulating Asynchronous Code
+
+```javascript
+// setTimeOut() emulates waiting for the server response
+function getContent() {
+    setTimeOut(() => {
+        return "React"
+    }, 2000);
+}
+
+function display() {
+    const what = getContent();
+    console.log(what);
+}
+
+console.log("Learning");
+display();
+```
+
+## async + await
+
+```javascript
+function getContent() {
+    return new Promise((resolve, reject) => {
+        setTimeOut(() => resolve("React"), 1000);
+    });
+}
+
+async function display() {
+    const what = await getContent();
+    console.log(what);
+}
+
+console.log("Learning");
+display();
+```
