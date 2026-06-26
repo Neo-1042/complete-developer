@@ -15,3 +15,41 @@ npx tsc first-app.ts
 ```bash
 npm create vite@latest react-ts-basics
 ```
+
+# CourseGoal Example
+
+File = components/CourseGoal.tsx
+```tsx
+export default function CourseGoal(props: {
+    title: string;
+    description: string;
+}) {
+
+    return (
+        <article>
+            <div>
+                <h2>{props.title}</h2>
+                <p>{props.description}</p>
+            </div>
+            <button>Delete</button>
+        </article>
+    );
+}
+```
+
+File = App.tsx
+```tsx
+import CourseGoal from './components/CourseGoal.tsx';
+
+export default function App() {
+
+    return (
+    <main>
+        <CourseGoal 
+            title="Learn React + TS" 
+            description="Some Description"
+        />
+    </main>
+    );
+}
+```
