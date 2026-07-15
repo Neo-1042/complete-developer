@@ -73,3 +73,33 @@ docker build -t in28min/hello-world-docker:v3 .
 docker container run -d -p 5000:5000 in28min/hello-world-docker:v3
 docker build -t in28min/hello-world-docker:v4 .
 ```
+
+### Manual Setup (High Risk of Making Mistakes)
+
+Hardware > OS > Software > Dependencies > App
+
+### Instead, use Docker:
+
+```bash
+docker container run -d -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
+```
+
+Docker enables a simpler deployment process, independent from:
+- OS
+- Programming Language
+- Hardware
+
+Once a developer creates a **docker image**, the operations
+team will run the docker image with all of the necessary
+artifacts and tools to install and run the app.
+
+```bash
+docker container ls
+docker container stop <container_id>
+```
+
+## Why is Docker Popular?
+
+- Standard Application Packaging (for any PL)
+- Multi-platform Support (local, cloud or data center)
+- Isolation (Each container is isolated from each other)
