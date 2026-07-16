@@ -103,3 +103,35 @@ docker container stop <container_id>
 - Standard Application Packaging (for any PL)
 - Multi-platform Support (local, cloud or data center)
 - Isolation (Each container is isolated from each other)
+
+## How does Docker work?
+
+When you run:
+```bash
+docker container run -d -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
+```
+
+An **image** is simply a set of bytes.
+The Docker image is downloaded from the **Docker Registry**
+(Default = **Docker Hub**).
+
+**Container** = a running version of that specific image.
+
+```bash
+# List the running image (container):
+docker container ls
+# List the available images:
+docker image ls
+```
+
+`-p hostPort:containerPort` --> maps **internal docker port**
+(container port) to a port on the host (host port).
+
+### Run 2 instances of the same container (Change hostPort)
+
+```bash
+# Instance 1
+docker container run -d -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
+# Instance 2
+docker container run -d -p 5001:5000 in28min/hello-world-python:0.0.1.RELEASE
+```
