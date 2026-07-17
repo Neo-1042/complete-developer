@@ -124,6 +124,10 @@ docker container ls
 docker image ls
 ```
 
+containerPort = only the developer of the docker image can
+change it.  
+hostPort = the application user can change this.
+
 `-p hostPort:containerPort` --> maps **internal docker port**
 (container port) to a port on the host (host port).
 
@@ -135,3 +139,13 @@ docker container run -d -p 5000:5000 in28min/hello-world-python:0.0.1.RELEASE
 # Instance 2
 docker container run -d -p 5001:5000 in28min/hello-world-python:0.0.1.RELEASE
 ```
+
+## Bridge Network
+
+By default, Docker uses its own internal network called the
+**bridge network**. Users of the application will not have
+access to this bridge network. This is why the hostPort is
+exposed.
+
+`-d` ---> Detached mode. The terminal will not be tied up to
+the running container.
