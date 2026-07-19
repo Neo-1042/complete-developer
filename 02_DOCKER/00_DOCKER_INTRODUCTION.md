@@ -149,3 +149,21 @@ exposed.
 
 `-d` ---> Detached mode. The terminal will not be tied up to
 the running container.
+
+## Docker Terminology Summary
+
+- **Docker Image** = A package representing a specific
+version of your application.
+
+- **Docker Registry** = A place that stores docker images.
+
+- **Docker Hub** = The most popular docker registry.
+
+- **Docker Repository** = Docker images for a specific app
+(tags are used to differentiate images)
+
+- **Docker Container** = A *runtime* instance of a docker
+image.
+
+- **Dockerfile** = a plain-text file with instructions to
+create a Docker image. 
