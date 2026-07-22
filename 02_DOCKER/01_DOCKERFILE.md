@@ -41,3 +41,43 @@ container launch.
 8. Validate that the image is running (i.e. it becomes a
 **Docker container**):  
     `docker container ls`
+
+## Multi Stage Dockerfile 
+
+Previously, we created the *.jar file separately. Now, we can
+add this step as part of the creation of the Docker image
+(best practice).
+
+1. Stage I  --> Build the jar file. Notice that this stage
+is given the name `AS build`.
+2. Stage II --> Run the jar file
+
+```docker
+FROM maven:3.8.6-openjdk-18-slim AS build
+WORKDIR /home/app
+COPY . /home/app
+RUN mvn -f /home/app/pom.xml clean package
+
+FROM openjdk:18.0-slim
+VOLUME /tmp
+EXPOSE 8080
+COPY --from=build /home/app/target/*.jar app.jar
+ENTRYPOINT [ "sh", "-c", "java -jar /app.jar" ]
+```
+
+In this way, your build does not make use of anything built on
+your local machine.
+
+With this new Dockerfile, let's build a new docker image:
+
+```bash
+docker container stop IMAGE_ID
+docker container ls
+
+docker build -t neo_1042/hello-world-docker:v2 .
+
+docker image ls
+
+# RUN
+docker container run -d -p 5000:5000 neo_1042/hello-world-docker:v2
+```
