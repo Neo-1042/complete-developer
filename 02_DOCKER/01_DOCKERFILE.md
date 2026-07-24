@@ -81,3 +81,49 @@ docker image ls
 # RUN
 docker container run -d -p 5000:5000 neo_1042/hello-world-docker:v2
 ```
+
+## Optimizing the Dockerfile: Layer Caching
+
+```docker
+FROM maven:3.8.6-openjdk-18-slim AS build
+WORKDIR /home/app
+
+COPY ./pom.xml /home/app/pom.xml
+COPY ./src/main/java/com/example/demodocker/DemoDockerApplication.java /
+/home/app/src/main/java/com/example/demodocker/DemoDockerApplication.java
+
+RUN mvn -f /home/app/pom.xml clean package
+
+COPY . /home/app/pom.xml clean package
+
+FROM openjdk:18.0-slim
+EXPOSE 5000
+COPY --from=build /home/app/target/*.jar app.jar
+ENTRYPOINT [ "sh", "-c", "java -jar /app.jar" ]
+```
+
+Docker uses and tries to reuse layers. If nothing changes
+in one layer
+from a given `docker build ...` to the next, Docker will try
+to reuse said layer.
+For Java applications, one of the steps that take the most
+time is downloading dependencies (`mvn clean package`).
+Luckily, dependencies don't usually change from one image build
+to another, so Docker take advantage of this by first 
+triggering a build only with the `DemoDockerApplication.java`
+and the `pom.xml` files (since these two don't change often)
+and separating them from the other commands, like this:
+
+```docker
+[...]
+COPY ./pom.xml /home/app/pom.xml
+COPY ./src/main/java/com/example/demodocker/DemoDockerApplication.java /
+/home/app/src/main/java/com/example/demodocker/DemoDockerApplication.java
+
+RUN mvn -f /home/app/pom.xml clean package
+[...]
+```
+
+Thus, if you don't make any changes to the
+`DemoDockerApplication.java` nor the main `pom.xml` files,
+the first five commands in the `Dockerfile` will be REUSED.
