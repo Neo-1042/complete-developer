@@ -127,3 +127,20 @@ RUN mvn -f /home/app/pom.xml clean package
 Thus, if you don't make any changes to the
 `DemoDockerApplication.java` nor the main `pom.xml` files,
 the first five commands in the `Dockerfile` will be REUSED.
+
+The first `RUN mvn -f /home/app/pom.xml clean package` command
+will download the dependencies, thereby reducing the time
+of the following image build processes.
+
+When you reuse cached steps, you will see something similar to
+the following output after runing
+`docker build -t neo_1042/hello-world-docker:v4`:
+
+```log
+ => CACHED [build 2/7] WORKDIR ... 0.0s
+ => CACHED [build 3/7] COPY ... 0.0s
+ => CACHED [build 4/7] COPY ... 0.0s
+ => CACHED [build 5/7] RUN ... 0.0s
+ => [build 6/7] COPY ... 0.1s
+ => [build 7/7] RUN ... 32.9s
+```
