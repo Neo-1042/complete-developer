@@ -109,3 +109,38 @@ gcloud container clusters get-credentials my-cluster --zone us-central1-c --proj
 # Fetching cluster endpoint and auth data.
 # kubeconfig entry generated for my-cluster
 ```
+
+## `kubectl` --> Command Line Tool for Kubernetes
+
+5. Deploy the microservice to Kubernetes:  
+Create **deployment** + **service** using `kubectl` commands:
+
+```bash
+# This image must be already pushed to Docker Hub
+kubectl create deployment hello-world-rest-api --image=neo_1042/hello-world-rest-api:0.0.1.RELEASE
+
+kubectl get deployment
+# Expose information about this deployment
+kubectl expose deployment hello-world-rest-api --type=LoadBalancer --port=8080
+
+kubectl get services
+# NAME                  TYPE          CLUSTER-IP      EXTERNAL-IP     PORT(S)            AGE
+# hello-world-rest-api  LoadBalancer  10.80.13.230     <pending>      8080:30095/TCP     26s
+# kubernetes            ClusterIP     10.80.0.1        <none>         443/TCP            12m
+```
+
+When you expose a deployment, you create a service. Now, we wait the
+external-ip to be assigned to this LoadBalancer. Let's monitor it:
+```bash
+kubectl get services --watch
+# Now, the EXTERNAL-IP has been assigned:
+# NAME                  TYPE          CLUSTER-IP      EXTERNAL-IP     PORT(S)            AGE
+# hello-world-rest-api  LoadBalancer  10.80.13.230    35.184.204.214  8080:30095/TCP     26s
+# kubernetes            ClusterIP     10.80.0.1        <none>         443/TCP            12m
+```
+
+Copy the `EXTERNAL-IP` value = 35.184.204.214 and curl it:
+```bash
+curl 35.184.204.214:8080
+curl 35.184.204.214:8080/hello-world
+```
