@@ -29,9 +29,9 @@ flowchart TB
     A["Container Images"] --> B["Container Orchestrator"]
     C["Configuration"] --> B
     B --> D["Cluster"]
-    D --> E["Virtual Server 1"]
-    D --> F["Virtual Server 2"]
-    D --> G["Virtual Server 3"]
+    D --> E["Virtual Server 1</br>2 CPUs + 4 GB of RAM"]
+    D --> F["Virtual Server 2</br>2 CPUs + 4 GB of RAM"]
+    D --> G["Virtual Server 3</br>2 CPUs + 4 GB of RAM"]
 ```
 
 ## Google Cloud Platform
@@ -87,4 +87,25 @@ gcloud projects list
 kubectl delete service hello-world-rest-api
 kubectl delete deployment hello-world-rest-api
 gcloud container clusters delete my-cluster --zone us-central1-c
+```
+
+After creating the cluster, you will be able to see:
+
+| Name | Location | Number of Nodes | Total vCPUs  | Total Memory |
+| :--- | :---     |      :---:      |  :---:  | :---: |
+| my-cluster | us-central1-c  | 3  | 6  |  12 GB |
+
+3. Login to **Google Cloud Shell**, from which 
+you can connect to this cluster:
+
+```bash
+gcloud config set project [PROJECT_ID]
+# Google Cloud Platform will provide you with this command:
+```
+
+4. Connect to the Kubernetes Cluster
+```bash
+gcloud container clusters get-credentials my-cluster --zone us-central1-c --project my-kubernetes-project-123456
+# Fetching cluster endpoint and auth data.
+# kubeconfig entry generated for my-cluster
 ```
