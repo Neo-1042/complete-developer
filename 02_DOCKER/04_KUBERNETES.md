@@ -144,3 +144,28 @@ Copy the `EXTERNAL-IP` value = 35.184.204.214 and curl it:
 curl 35.184.204.214:8080
 curl 35.184.204.214:8080/hello-world
 ```
+
+## Google Kubernetes Engine > Clusters
+
+When the Kubernetes Cluster was created using the Google Kubernetes Engine,
+GKE created a Node Pool that contains nodes. One Kubernetes cluster can
+contain multiple node pools.
+
+Later, you can add a node pool that contains GPUs, for instance.
+
+## Google Kubernetes Engine > Workloads
+
+What is running in the cluster? Each instance that is part of a
+deployment = POD.
+```bash
+# Google Cloud Shell:
+kubectl get events
+```
+
+[+] In addition to deploying services to Kubernetes using the
+Google Cloud Shell, you can use a YAML configuration file.
+
+- Services ---> Sets of Pods with a network endpoint that can be used
+for discovery and load balancing.
+- Ingresses ---> Collections of rules for routing external HTTP(S) traffic
+to Services.
