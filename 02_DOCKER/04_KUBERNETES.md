@@ -156,7 +156,7 @@ Later, you can add a node pool that contains GPUs, for instance.
 ## Google Kubernetes Engine > Workloads
 
 What is running in the cluster? Each instance that is part of a
-deployment = POD.
+deployment = **POD**.
 ```bash
 # Google Cloud Shell:
 kubectl get events
@@ -169,3 +169,25 @@ Google Cloud Shell, you can use a YAML configuration file.
 for discovery and load balancing.
 - Ingresses ---> Collections of rules for routing external HTTP(S) traffic
 to Services.
+
+## 6. Increase Number of Instances of your Microservices
+
+```bash
+# Google Cloud Shell
+kubectl scale deployment hello-world-rest-api --replicas=3
+
+# Validate how many instances are deployed
+kubectl get deployment
+watch curl EXTERNAL_IP:PORT
+
+# View details on each instance (pod)
+kubectl get pods
+```
+
+## 7. Increase Number of Nodes in the Cluster
+
+```bash
+# Google Cloud Shell
+# Manual Scaling of the Cluster:
+gcloud container clusters resize my-cluster --node-pool default-pool --num-nodes=5 --zone=us-central1-c
+```
