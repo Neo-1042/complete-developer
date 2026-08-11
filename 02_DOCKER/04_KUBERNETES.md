@@ -184,10 +184,31 @@ watch curl EXTERNAL_IP:PORT
 kubectl get pods
 ```
 
-## 7. Increase Number of Nodes in the Cluster
+## 7. Manually Increase Number of Nodes in the Cluster
 
 ```bash
 # Google Cloud Shell
 # Manual Scaling of the Cluster:
 gcloud container clusters resize my-cluster --node-pool default-pool --num-nodes=5 --zone=us-central1-c
+# ... 10-15 minutes
+```
+
+How to automatically scale?
+
+## 8. Setup Auto-Scaling for your Microservices. HPA
+
+```bash
+# Setting up a maximum of 4 instances, max CPU utilization of 70%
+kubectl autoscale deployment hello-world-rest-api --max=4 --cpu-percent=70
+```
+
+**HPA** = Horizontal Pod Autoscaling.
+```bash
+kubectl get hpa
+```
+
+## 9. Setup Auto-Scaling for your Kubernetes Cluster
+
+```bash
+gcloud container clusters update cluster-name --enable-autoscaling --min-nodes=1 --max-nodes=10
 ```
