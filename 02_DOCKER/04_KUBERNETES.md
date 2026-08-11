@@ -212,3 +212,28 @@ kubectl get hpa
 ```bash
 gcloud container clusters update cluster-name --enable-autoscaling --min-nodes=1 --max-nodes=10
 ```
+
+## 10. Add Application Configuration. Config Map
+
+```bash
+# Config Map
+kubectl create configmap hello-world-config --from-literal=RDS_DB_NAME=todos
+
+kubectl get configmap
+kubectl describe configmap hello-world-config
+```
+
+## 11. Store Secrets
+
+```bash
+kubectl create secret generic hello-world-secrets-1 --from-literal=RDS_PASSWORD=123456789
+
+kubectl get secret
+kubectl describe secret hello-world-secrets-1 # Encrypted
+```
+
+## Kubernetes Deployments with YAML (declarative style)
+
+```bash
+kubectl apply -f deployment.yaml
+```
