@@ -237,3 +237,30 @@ kubectl describe secret hello-world-secrets-1 # Encrypted
 ```bash
 kubectl apply -f deployment.yaml
 ```
+
+## 12. Add a New Node Pool with GPUs. `nodeSelector`
+
+```bash
+# Google Cloud Shell
+# Attach a new node pool with GPU instances to your cluster
+gcloud container node-pools create POOL_NAME --cluster CLUSTER_NAME
+gcloud container node-pools list --cluster CLUSTER_NAME
+
+# Deploy the new microservice to the new pool by setting up
+# a nodeSelector in the deployment.yaml
+nodeSelector: cloud.google.com/gke-nodepool:POOL_NAME
+```
+
+## 13. Delete the Microservices/Deployment
+
+```bash
+kubectl delete foo_microservice
+
+kubectl delete deployment
+```
+
+## 14. Delete the Cluster
+
+```bash
+gcloud container clusters delete CLUSTER_NAME
+```
