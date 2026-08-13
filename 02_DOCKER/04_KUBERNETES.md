@@ -264,3 +264,22 @@ kubectl delete deployment
 ```bash
 gcloud container clusters delete CLUSTER_NAME
 ```
+
+# Google Kubernetes Engine (GKE) Cluster Review
+
+**Cluster** = A group of comput engine instances.
+Each cluster has a **master node** which manages the
+**worker nodes**.
+
+### Master Node (control plane) components:
+
+- API Server -> Handles all (inbound and outbound)
+communication for a K8S cluster.
+- Scheduler -> Decides the placement of the pods (nodes).
+- Control Manager -> Manages deployments and replica sets.
+- `etcd` -> Distributed DB storing the cluster's state.
+
+### Worker Node components:
+
+- Pods = Instances of our microservices.
+- Kubelet -> Manages communication with the master node.
