@@ -48,5 +48,24 @@ its specific pods and containers).
 ```bash
 # Here you can check which replicasets are not active
 kubectl get replicasets
-kubectl get po
+kubectl get pods
+kubectl delete pod hello-world-rest-api-PODNUMBER
+kubectl get pods
+```
+
+```bash
+kubectl scale deployment m2 --replicas=2
+# Even if one of the pods is killed, replica set will launch
+# a new one.
+kubectl get replicasets
+# DESIRED   CURRENT    READY
+```
+
+If you deploy V2 of a microservice, a new replica set will be
+created:
+```bash
+# Deploy version 2:
+kubectl set image deployment m1 m1=m1:v2
+# The deployment updates v1 and v2 replica sets based on the
+# release strategies.
 ```
