@@ -31,3 +31,29 @@ balancer for each microservice. You can create one
 **Ingress component** to load balance multiple microservices.
 
 Google Cloud Platform ---> _Services & Ingress_.
+
+# Command-Line Tools to Deploy your App
+
+## `gcloud` Installation
+
+1. `gcloud` ---> CLI to Google Cloud.
+2. `kubectl` ---> CLI to Kubernetes.
+
+```bash
+curl https://sdk.cloud.google.com | bash
+# Restart your shell
+exec -l $SHELL
+
+gcloud auth login
+# START GCLOUD
+gcloud init
+```
+
+## `kubectl` Installation
+
+```bash
+# If homebrew is installed, then:
+brew install kubectl
+
+kubectl version
+```
