@@ -48,3 +48,9 @@ and **Recovery**.
 
 > Informix allows you to manage thousands of data servers
 with a handful of admins.
+
+# Fully-Qualified Query in IBM Informix
+
+```sql
+db_name@db_server:owner.tablename
+```
