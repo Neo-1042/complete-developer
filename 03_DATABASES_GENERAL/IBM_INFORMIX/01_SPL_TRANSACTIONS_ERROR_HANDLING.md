@@ -47,3 +47,71 @@ By default, if Informix tries to **read** or **update** a row that is locked by 
 - **What this sentence implies**: this command tells the database: "If you hit a lock, do not fail immediately. Wait up to 3 seconds for the other transaction to release the lock. If 3 seconds pass and it is still locked, then throw the error".
 
 - **Banking Use Case**: This is the standard survival mechanism for heavily hit tables (like `tbl_account` or `tbl_ledger`). It prevents **transient locks** (lasting a few milliseconds) from instantly failing your stored procedure.
+
+# Exception Handling Scope in SPL
+
+Informix SPL traps errors using the `ON EXCEPTION` block.
+
+**Scope Rule** ---> An `ON EXCEPTION` block applies **only to the statements that follow it** *within the same statement block* (e.g., between `BEGIN` and `END`, or within a loop), and it **overrides any previously defined exception handler** for those specific errors.
+
+```sql
+CREATE PROCEDURE "informix".safe_update8()
+    DEFINE v_err_ INT;
+    DEFINE v_isam INT;
+
+    -- This handler catches ALL errors (because there is no specifin IN (...))
+    ON EXCEPTION SET v_err, v_isam
+        -- If an error occurs below, EXECUTION JUMPS HERE:
+        ROLLBACK WORK;
+        -- You can raise a custom error to the Java backend using "RAISE EXCEPTION"
+        RAISE EXCEPTION -746, 0, "Transaction Failed due to lock timeout";
+    END EXCEPTION;
+
+    BEGIN WORK;
+    -- Informix will wait 3 seconds before throwing a "-244: lock error"
+    SET LOCK MODE TO WAIT 3;
+    -- Ahora sí, van los DML:
+    UPDATE tbl_ledger
+    SET status = 'PROCESSED'
+    WHERE status = 'PENDING';
+    -- If for some reason an error is thrown, the COMMIT will NOT be executed. Instead, the ROLLBACK WORK will be executed.
+    COMMIT WORK;
+END PROCEDURE;
+```
+
+## `END EXCEPTION WITH RESUME;`
+
+```sql
+ON EXCEPTION SET v_err, v_isam
+    ROLLBACK WORK;
+    RAISE EXCEPTION -746, 0, "Transaction failed due to lock timeout";
+END EXCEPTION WITH RESUME;
+```
+
+With that last `WITH RESUME;`, Informix will execute the handler block and then jump back to the EXACT line after the one that failed, **continuing execution**.
+
+# Transactional Errors (`-255` and `-535`)
+
+<u>**Summary**</u>:
+
+1. `-255: Not in Transaction` (`COMMIT;` or `ROLLBACK;` without `BEGIN WORK`;)
+2. `-535: Already in Transaction` (`BEGIN WORK;` ... `BEGIN WORK;`).
+
+Informix tracks transaction states meticulously. When you get transactional errors, it usually means the logical flow of your SPL `BEGIN > COMMIT/ROLLBACK` statements got misaligned, often due to **unhandled exceptions jumping over a `COMMIT`**.
+
+## `-255: Not In Transaction`
+
+**Why it happens in SPL**:
+1. You attempted to execute `COMMIT WORK;` or `ROLLBACK WORK;`, but there is no active transaction.
+You already committed/rolled back earlier in the execution path, and hit a second `COMMIT/ROLLBACK WORK;`.
+2. You called a stored procedure that issued a `BEGIN WORK;`, but **failed** and **rolled back internally**, and then the parent procedure tried to commit.
+3. The DB was created **without transaction logging** (rare in modern systems, but possible in **legacy scratchpad databases**).
+
+## `-535: Already in Transaction`
+
+**Why it happens in SPL**:
+1. You attempted to execute `BEGIN WORK;` but a transaction was already open. Informix does **not** support **nested transactions** using `BEGIN WORK;`. You cannot start a transaction inside a transaction.
+
+2. If a Java application opens a JDBC transaction (e.g. Spring's `@Transactional`) and then calls an Informix Stored Procedure that explicitly contains `BEGIN WORK;`, Informix will throw an `-535` error. 
+
+3. To handle partial rollbacks within an active transaction, you must use savepoints (`SAVEPOINT sp1;` and `ROLLBACK WORK TO SAVEPOINT sp1;`) instead of nested `BEGIN WORK;` commands.
