@@ -55,7 +55,7 @@ Informix SPL traps errors using the `ON EXCEPTION` block.
 **Scope Rule** ---> An `ON EXCEPTION` block applies **only to the statements that follow it** *within the same statement block* (e.g., between `BEGIN` and `END`, or within a loop), and it **overrides any previously defined exception handler** for those specific errors.
 
 ```sql
-CREATE PROCEDURE "informix".safe_update8()
+CREATE PROCEDURE "informix".safe_update()
     DEFINE v_err_ INT;
     DEFINE v_isam INT;
 
@@ -115,3 +115,30 @@ You already committed/rolled back earlier in the execution path, and hit a secon
 2. If a Java application opens a JDBC transaction (e.g. Spring's `@Transactional`) and then calls an Informix Stored Procedure that explicitly contains `BEGIN WORK;`, Informix will throw an `-535` error. 
 
 3. To handle partial rollbacks within an active transaction, you must use savepoints (`SAVEPOINT sp1;` and `ROLLBACK WORK TO SAVEPOINT sp1;`) instead of nested `BEGIN WORK;` commands.
+
+# Transactional SP that handles 255 and 535
+
+Spring often manages transactions via the `@Transactional` annotation, meaning, by the time the SP is called, a transaction might already be open.
+
+Using `WITH RESUME` for errors -535 and -255 makes the procedure flexible: it can be executed standalone (it will create and commit its own transaction) or executed by Spring (it will politely ignore its own transaction commands and let Spring handle the COMMIT/ROLLBACK).
+
+```sql
+CREATE PROCEDURE "informix".sp_charge_monthly_fee(
+    p_acc_id INT
+    ,p_fee DECIMAL(10,2)
+)
+-- Interesting, the OLTP usually does not use these (...)
+DEFINE v_sql_code INT;
+DEFINE v_isam_code INT;
+
+-- 1] Specific handler for Transaction State Errors (-535,-255)
+-- If Spring already opened a transaction, BEGIN WORK throws -535.
+-- If Spring already closed it, COMMIT WORK throws -255.
+ON EXCEPTION IN (-535, -255) SET v_sql_code, v_isam_code
+    -- Do nothing, but WITH RESUME tells Informix to jump back to the exact line AFTER the one that failed and keep going
+END EXCEPTION WITH RESUME;
+
+
+
+END PROCEDURE;
+```
