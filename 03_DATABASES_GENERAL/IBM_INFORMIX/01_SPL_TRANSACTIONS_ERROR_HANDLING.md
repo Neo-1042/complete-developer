@@ -138,7 +138,37 @@ ON EXCEPTION IN (-535, -255) SET v_sql_code, v_isam_code
     -- Do nothing, but WITH RESUME tells Informix to jump back to the exact line AFTER the one that failed and keep going
 END EXCEPTION WITH RESUME;
 
+-- 2] General handler for all other errors (e.g. -244 lock timeout)
+ON EXCEPTION SET v_sql_code, v_isam_code
+    -- Attempt to rollback whatever was done.
+    -- (If we are not actually in a transaction, this ROLLBACK throws -255 "Not in Transaction")
+    -- which is safely caught and ignored by the first handler above!)
+    ROLLBACLK WORK;
+    
+    -- Pass the real error back to the Java app
+    RAISE EXCEPTION v_sql_code, v_isam_code, "Failed to apply montly fee";
+END EXCEPTION;
 
+-- Concurrency configuration
+-- DIRTY READ ensures any SELECTs in this SP do not place or wait for read locks
+SET ISOLATION TO DIRTY READ;
+
+-- Wait up to 3 seconds for existing locks to clear before throwing -244
+SET LOCK MODE TO WAIT 3;
+
+-- If Spring opened a tx, this throws -535 -> trapped -> RESUMES at the next line
+BEGIN WORK;
+
+-- DML operations
+UPDATE tbl_accounts
+SET balance = balance - p_fee
+WHERE acct_id = p_acct_id;
+
+INSERT INTO ledger_history (acct_id, tx_type, amount, tx_date)
+VALUES (p_acct_id, 'MONTHLY_FEE', p_fee, CURRENT);
+
+-- If Spring is managing the tx, this might throw -255 or be ignored -> RESUMES
+COMMIT WORK;
 
 END PROCEDURE;
 ```
