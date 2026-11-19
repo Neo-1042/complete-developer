@@ -173,13 +173,14 @@ COMMIT WORK;
 END PROCEDURE;
 ```
 
-How WITH RESUME Solves the Problem
-The END EXCEPTION WITH RESUME clause acts like a "continue" statement for errors.
+## How WITH RESUME Solves the Problem
 
-If line 24 (BEGIN WORK;) triggers a -535 Already in transaction error:
+The `END EXCEPTION WITH RESUME` clause acts like a "continue" statement for errors.
 
-Informix jumps up to the first ON EXCEPTION block.
+If the line (`BEGIN WORK;`) triggers a `-535 Already in transaction` error:
 
-It hits END EXCEPTION WITH RESUME.
+1. Informix jumps up to the first ON EXCEPTION block.
 
-It immediately drops back down to line 27 (UPDATE accounts...) and continues executing normally.
+2. It hits END EXCEPTION WITH RESUME.
+
+3. It immediately drops back down to the next line (`UPDATE accounts`...) and continues executing normally.
