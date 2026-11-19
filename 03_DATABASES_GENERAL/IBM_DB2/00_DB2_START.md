@@ -42,7 +42,36 @@ db2 "terminate"
 
 ```bash
 # -t = enforce semicolon delimiter
-# -v = verbose
+# -v = verbose (I love verbose commands <3)
 # -f = file
-db2 -tvf script-sql
+db2 -tvf script.sql
 ```
+
+# Essential Commands & Syntax: DB2 vs Informix
+
+## CLI & Metadata Inspection
+
+In Informix, you query `systables` or use `dbschema`. In DB2, you have built-in CLP shortcuts as well as `SYSCAT` catalog views.
+
+| Task   |   Informix (`dbaccess`/`dbschema`)    | DB2 CLP / SQL (`-t`)  |
+| :---   | :---          |   :---          |
+| List user tables       | `SELECT tabname FROM systables WHERE tabid > 99;`       | `LIST TABLES;` (current schema) or `LIST TABLES FOR ALL;`    |
+| Describe table structure | `INFO COLUMNS FOR table_name;` | `DESCRIBE TABLE schema.table_name;` |
+| Describe query output | (Inspect target table) | `DESCRIBE SELECT * FROM schema.table_name;` |
+| Extract DDL | `dbschema -d dbname -t tabname` | `db2look -d dbname -e -t tabname` (from AIX shell) |
+| Check current DB/User | `SELECT DBINFO('dbname'), USER FROM systables WHERE tabid=1;` | `VALUES CURRENT SERVER, CURRENT USER;` |
+| Dummy table for Expressions | `SELECT TODAY FROM systables WHERE tabid=1;` | `VALUES CURRENT DATE` or `SELECT 1 FROM SYSIBM.SYSDUMMY1;`  |
+
+## SQL Dialect & Querying Differences
+
+| Feature   |   Informix SQL | DB2 SQL  |
+| :---   | :---          |   :---          |
+| Limit rows returned | `SELECT FIRST 10 * FROM table;` | `SELECT * FROM table FETCH FIRST 10 ROWS ONLY;` |
+| Row numbering/pagination | `SELECT SKIP 20 FIRST 10 * FROM table;` | `SELECT * FROM table OFFSET 20 ROWS FETCH NEXT 10 ROWS ONLY;` |
+| Current Date/Timestamp | `TODAY`/`CURRENT YEAR TO SECOND;` | `CURRENT DATE` / `CURRENT TIMESTAMP` |
+| Date Arithmetic | `TODAY - 7 UNITS DAY` | `CURRENT DATE - 7 DAYS` |
+| Null Coalescing | `NVL(col, 'default')` | `COALESCE(col, 'default')` |
+| String concatenation | `col1 \|\| col2` | `col1 \|\| col2` |
+| Case-insesntive match | `col MATCHES '*abc*'` or `ILIKE` | `UPPER(col) LIKE '%ABC%'` |
+| Isolation / Dirty Read | `SET ISOLATION TO DIRTY READ;` | Append `WITH UR` (Uncommitted Read) to the end of a `SELECT` |
+| Lock wait timeout | `SET LOCK MODE TO WAIT 5;` | `SET CURRENT LOCK TIMEOUT 5;` |
